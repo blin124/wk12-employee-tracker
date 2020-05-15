@@ -1,25 +1,5 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql");
-
-const connection = mysql.createConnection({
-  host: "localhost",
-
-  // Your port; if not 3306
-  port: 3306,
-
-  // Your username
-  user: "root",
-
-  // Your password
-  password: "Baowiwowi4255!",
-  database: "employee_tracker"
-});
-
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("connected as id " + connection.threadId + "\n");
-  createProduct();
-});
+const mysqlConnection = require("./connection.js");
 
 function firstQuery() {
     inquirer
@@ -41,10 +21,12 @@ function firstQuery() {
         }
     ]).then(answers => {
         if (answers.type === "View All Employees") {
-            viewAllEmployees()
+            viewAllEmployees();
+            console.table(viewAllEmployees)
 
         } else if (answers.type === "View All Employees by Department") {
-            viewAllEmployeesByDepartments()
+            viewAllEmployeesByDepartments();
+            console.table(viewAllEmployeesByDepartments)
 
         } else if (answers.type === "Add Employee") {
             addEmployee()
@@ -53,10 +35,11 @@ function firstQuery() {
             addEmployeeRoles()
 
         } else {
-            viewAllRoles()
+            viewAllRoles();
+            console.table(viewAllRoles)
         }
     })
-};
+}
 
 function addEmployee() {
     inquirer
@@ -74,13 +57,26 @@ function addEmployee() {
         {
             type: "input",
             message: "What is the employees role??",
+            choice: [
+                "Sales Lead",
+                "Salesperson",
+                "Lead Engineer",
+                "Software Engineer",
+                "Account Manager",
+                "Accountant",
+                "Legal Team Lead"
+            ],
             name: "role"
         },
         {
             type: "input",
             message: "Who is the employees manager?",
             name: "employeesManager"
+            // choice from input employees
         }
+        .then ({
+            firstQuery()
+        })
     ])
 }
 
@@ -103,9 +99,9 @@ function addEmployeeRoles() {
         },
     ]).then(answers => {
         if (answers.type === "Engineer") {
-            addEngineer()
+            // addEngineer()
         } else if (answers.type === "Intern") {
-            addIntern()
+            // addIntern()
         } else {
             
         }
